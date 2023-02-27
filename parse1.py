@@ -43,7 +43,11 @@ class Identifier:
 class Operator:
     op: str
 
-Token = Num | Bool | Keyword | Identifier | Operator
+@dataclass
+class BitwiseOperator:
+    op:str
+
+Token = Num | Bool | Keyword | Identifier | Operator | BitwiseOperator
 
 class EndOfTokens(Exception):
     pass
@@ -65,11 +69,10 @@ def word_to_token(word):
         return Keyword(word)
     if word in word_operators:
         return Operator(word)
-    if word in Bitwise_operators:
+    if word in Bitwise_Operators:
         return BitwiseOperator(word)
     if word in symbolic_operators:
         return Operator(word)
-
     if word == "True":
         return Bool(True)
     if word == "False":
@@ -98,9 +101,21 @@ class Lexer:
     def next_token(self) -> Token:
         try:
             match self.stream.next_char():
-                case c if c in symbolic_operators: return Operator(c)
                 case c if c in Bitwise_Operators: return BitwiseOperator(c)
-
+                case c if c in symbolic_operators:
+                    try:
+                        c2=self.stream.next_char()
+                        if c=='<' and c2=='<':
+                            s=c+c2
+                            return Operator(s)
+                        elif c=='>' and c2=='>':
+                            s=c+c2
+                            return Operator(s)
+                        else:
+                            self.stream.unget()
+                            return Operator(c)
+                    except EndOfStream:
+                        return Operator(c)
                 case c if c.isdigit():
                     n = int(c)
                     while True:
@@ -213,6 +228,9 @@ class Parser:
     
     def parse_atom(self):
         match self.lexer.peek_token():
+            case Operator(value):
+                self.lexer.advance()
+                return Operator(value)
             case Identifier(name):
                 self.lexer.advance()
                 return Variable(name)
@@ -226,7 +244,6 @@ class Parser:
                 self.lexer.advance()
                 return StringLiteral(value)
 
-    
 
     def parse_mult(self):
         left = self.parse_atom()
@@ -251,27 +268,27 @@ class Parser:
                 case _:
                     break
         return left
+    
+    def parse_shift(self):
+        left=self.parse_add()
+        while True:
+            match self.lexer.peek_token():
+                case Operator(op) if op in "<<>>":
+                    self.lexer.advance()
+                    right=self.parse_add()
+                    left=BinOp(op,left,right)
+                case _:
+                    break
+        return left
 
     def parse_cmp(self):
-        left = self.parse_add()
+        left = self.parse_shift()
         while True:
             match self.lexer.peek_token():
                 case Operator(op) if op in symbolic_operators :
                     self.lexer.advance()
-                    m = self.parse_add()
+                    m = self.parse_shift()
                     left=BinOp(op, left, m)
-                case _:
-                    break
-        return left
-    
-    def parse_bitwise(self):
-        left = self.parse_cmp()
-        while True:
-            match self.lexer.peek_token():
-                case BitwiseOperator(op) if op in "& ^ ~ |":
-                    self.lexer.advance()
-                    m = self.parse_cmp()
-                    left = BinOp(op, left, m)
                 case _:
                     break
         return left
@@ -313,6 +330,16 @@ def test_parse():
     print(eval(parse('let a=3 in a*a end')))
     print(parse('if 3+4 >2 then 3 else 5 end'))
     print(eval(parse('if 3+4 >8 then 3 else 5 end')))
+    print(parse('6 & 3 end'))
+    print(eval(parse('6 & 3 end')))
+    print(parse('6 | 3 end'))
+    print(eval(parse('6 | 3 end')))
+    print(parse('6 ^ 3 end'))
+    print(eval(parse('6 ^ 3 end')))
+    print(parse(' 6 << 3 end'))
+    print(eval(parse(' 6 << 3 end')))
+    print(parse(' 6 >> 3 end'))
+    print(eval(parse(' 6 >> 3 end')))
    
 
 test_parse()
