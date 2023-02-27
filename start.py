@@ -254,6 +254,18 @@ def typecheck(program: AST, env = None) -> TypedAST:
             
             return Let(t_var, t_num_val,t_expr)
         
+        case LetConst(var, num_val, expr):
+            t_var = typecheck(var)
+            t_num_val = typecheck(num_val)
+            t_expr = typecheck(expr)
+            print(t_num_val)
+            
+            type_num_val = [NumType , StringType]
+            if(t_num_val.type not in type_num_val ):
+                raise TypeError()
+            
+            return Let(t_var, t_num_val,t_expr)
+        
         case UnOp('-',vari):
             tvari=typecheck(vari)
             if tvari.type != NumType:
