@@ -523,8 +523,8 @@ def eval(program: AST, environment: Environment = None) -> Value:
             return  eval2(NumLiteral(un) )
         case UnOp('++',vari):
             un= eval2(vari )
-            un=un+1
-            return  eval2(NumLiteral(un) )
+            eval2(Put(vari,NumLiteral(un+1)))
+            return  eval2(NumLiteral(un+1) )
         case UnOp('--',vari):
             un= eval2(vari )
             un=un-1
@@ -597,6 +597,7 @@ def eval(program: AST, environment: Environment = None) -> Value:
             return bool(left_var)
         
         case For(condition,update,body):
+            environment.enter_scope()
             eval_cond=eval2(condition)
             while(eval_cond):
                 eval2(body)
@@ -604,5 +605,18 @@ def eval(program: AST, environment: Environment = None) -> Value:
                 cond=eval2(condition)
                 if(cond==False):
                     break
+            environment.exit_scope()
             return
+        
+        case Whilethen(condition,then_body):
+            environment.enter_scope()
+            condi = eval2(condition)
+            while(condi == True):
+                eval2(then_body)
+                condi = eval2(condition)
+                if(condi == False):
+                    break
+            environment.exit_scope()
+            return
+        
     raise InvalidProgram()

@@ -545,10 +545,25 @@ def test_for_iteration():
 
     # body=PrintOp()
 
-    array=ListLiteral([20,43,54,23340,3291])
-    body_array=PrintOp(ListOp("get",array,v))
-    f=Let(v,n1,For(condition,update,body_array))
+    # array=ListLiteral([20,43,54,23340,3291])
+    # body_array=PrintOp(ListOp("get",array,v))
+    x=Variable('x')
+    
+    body = BinOp("+",x,v) 
+    n2 = NumLiteral(0)
+    f=Let(x,n2 ,Let(v,n1,For(condition,update,body)))
     eval(f)
+
+def test_while():
+    v=Variable('v')
+    n1=NumLiteral(0)
+    s=NumLiteral(9)
+    condition=BinOp("<",v,s)
+
+    body = PrintOp(UnOp("++", v))
+    w = Whilethen(condition, body)
+    l = Let(v,n1, w)
+    eval(l)
 
 #  Test Typechek
 
@@ -586,7 +601,8 @@ def test_typecheck_string():
     assert tc.type==NumType
 
 
-
+# test_for_iteration()
+test_while()
 
 # test_let_eval()
 # test_div_operator()
@@ -609,7 +625,7 @@ def test_typecheck_string():
 # test_less_than_operator()
 # test_less_than_equal_operator()
 # test_string()
-# # test_UnBoolify()
+# test_UnBoolify()
 # test_if_Else()
 # test_list()
 # test_unop()
