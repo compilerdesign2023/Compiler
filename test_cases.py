@@ -566,16 +566,6 @@ def test_while():
     eval(l)
 
 #  Test Typechek
-# test_let_eval()
-# test_div_operator()
-# test_modulus_operator()
-# test_power_operator()
-# test_floor_div_operator()
-# test_equal_operator()
-# test_not_equal_operator()
-# test_greter_than_operator()
-# test_less_than_operator()
-# test_less_than_equal_operator()
 
 def test_typecheck_BinOp():
     import pytest
@@ -613,7 +603,7 @@ def test_typecheck_string():
 
 
 
-# test_let_eval()
+
 # test_div_operator()
 # test_modulus_operator()
 # test_power_operator()
@@ -641,3 +631,4 @@ def test_typecheck_string():
 # test_ls_rs()
 # test_bit()
 # test_typecheck_BinOp()
+# test_while()
