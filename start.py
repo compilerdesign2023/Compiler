@@ -105,7 +105,10 @@ class Let:
     var: 'AST'
     e1: 'AST'
     e2: 'AST'
-
+class LetGlobal:
+    var:'AST'
+    e1:'AST'
+    e2:Optional['AST']
 @dataclass
 class IfElse:
     condition: 'AST'
@@ -160,6 +163,8 @@ class For:
     condition:'AST'
     update:'AST'
     body:'AST'
+
+@dataclass
 
 class Environment:
     envs: List
@@ -322,7 +327,7 @@ def typecheck(program: AST, env = None) -> TypedAST:
             if tleft.type!=StringType:
                 raise TypeError()
             return StringOp("length",left,type=NumType)
-
+        
         case Un_boolify(left):
             tleft=typecheck(left)
             if tleft.type!=NumType or StringType:
@@ -396,7 +401,7 @@ def eval(program: AST, environment: Environment = None) -> Value:
         case BinOp("-", left, right):
             return eval2(left) - eval2(right)
         case BinOp("*", left, right):
-            return eval2(left,) * eval2(right )
+            return eval2(left) * eval2(right )
         case BinOp("/", left, right):
             if(right==0):
                 raise InvalidProgram()
@@ -585,7 +590,14 @@ def eval(program: AST, environment: Environment = None) -> Value:
             arr= eval2(array)
             arr.remove(index)
             return arr
-        
+        case ListOp('get',array,index):
+            # i_type=typecheck(index)
+
+            # if(i_type.type!=NumType):raise InvalidProgram()
+
+            if(int(eval2(index))>=len(eval2(array))): raise InvalidProgram()
+
+            return eval2(array)[int(eval2(index))]
         case Un_boolify(left):
             left_var=eval(left,environment)
             if left_var==0:
@@ -617,6 +629,8 @@ def eval(program: AST, environment: Environment = None) -> Value:
                 if(condi == False):
                     break
             environment.exit_scope()
+            environment.exit_scope()
             return
         
     raise InvalidProgram()
+
