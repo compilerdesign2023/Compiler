@@ -259,6 +259,18 @@ def typecheck(program: AST, env = None) -> TypedAST:
             
             return Let(t_var, t_num_val,t_expr)
         
+        case LetConst(var, num_val, expr):
+            t_var = typecheck(var)
+            t_num_val = typecheck(num_val)
+            t_expr = typecheck(expr)
+            print(t_num_val)
+            
+            type_num_val = [NumType , StringType]
+            if(t_num_val.type not in type_num_val ):
+                raise TypeError()
+            
+            return Let(t_var, t_num_val,t_expr)
+        
         case UnOp('-',vari):
             tvari=typecheck(vari)
             if tvari.type != NumType:
@@ -516,8 +528,8 @@ def eval(program: AST, environment: Environment = None) -> Value:
             return  eval2(NumLiteral(un) )
         case UnOp('++',vari):
             un= eval2(vari )
-            un=un+1
-            return  eval2(NumLiteral(un) )
+            eval2(Put(vari,NumLiteral(un+1)))
+            return  eval2(NumLiteral(un+1) )
         case UnOp('--',vari):
             un= eval2(vari )
             un=un-1
@@ -605,6 +617,18 @@ def eval(program: AST, environment: Environment = None) -> Value:
                 cond=eval2(condition)
                 if(cond==False):
                     break
+            environment.exit_scope()
+            return
+        
+        case Whilethen(condition,then_body):
+            environment.enter_scope()
+            condi = eval2(condition)
+            while(condi == True):
+                eval2(then_body)
+                condi = eval2(condition)
+                if(condi == False):
+                    break
+            environment.exit_scope()
             environment.exit_scope()
             return
         
