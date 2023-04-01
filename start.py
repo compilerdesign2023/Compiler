@@ -375,7 +375,6 @@ def typecheck(program: AST, env = None) -> TypedAST:
         
     raise TypeError()
 
-
 class InvalidProgram(Exception):
     pass
 
