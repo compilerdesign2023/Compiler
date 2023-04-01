@@ -1,0 +1,12 @@
+let a=0 in let b=1 in let c=2 in for a<10 up b++ do for b<10 up b++ do for c<10 up c++ do print a+b+c end
+let a=list [1,2,3] in let b= list [1,2] in print a end
+let a=String "Prajwal" in let b=String "jivtode" in print a+b end
+let a=1 in let b=10 in if a>0 then for a<10 up a++ do print a else print a+b end
+let a=0 in for a<10 up a++ do print a end
+let a=10 in let b=5 in for a>0 up a-- do if a>b then print 1 else print 0 end
+let a=0 in let b=1 in let c=2 in for a<10 up b++ do for b<10 up b++ do for c<10 up c++ do print a+b+c end
+let a=0 in let b=1 in if a<b then print 0 else print 1 end
+let a=list [1,2,3,4] in let b= list [5,6] in a+b end
+let a=0 in for a<10 up a++ do print a end
+let a=1 in let b=10 in if a>0 then for a<10 up a++ do print a else print a+b end
+

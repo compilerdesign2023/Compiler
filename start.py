@@ -122,6 +122,13 @@ class LetGlobal:
     var:'AST'
     e1:'AST'
     e2:Optional['AST']
+
+@dataclass
+class If:
+    cond: 'AST'
+    body: 'AST'
+    type: Optional[SimType] = None
+
 @dataclass
 class IfElse:
     condition: 'AST'
@@ -227,7 +234,7 @@ class Environment:
                 return env[name]
         return None
 
-AST = NumLiteral | BoolLiteral | BinOp | IfElse | StringLiteral | StringOp|ListLiteral|IntLiteral|FracLiteral|ListOp| Get | Put |Let | LetConst |Seq | Whilethen |For | Variable|LetFun | FunCall
+AST = NumLiteral | BoolLiteral | BinOp | IfElse | StringLiteral | StringOp|ListLiteral|IntLiteral|FracLiteral|ListOp| Get | Put |Let | LetConst |Seq | Whilethen |For | Variable|LetFun | FunCall | If
 
 
 @dataclass
@@ -313,6 +320,16 @@ def typecheck(program: AST, env = None) -> TypedAST:
         case PrintOp(inp):
             if inp==None:
                 raise TypeError()
+            
+        case If(c,b):
+            tc=typecheck(c)
+            if tc.type != BoolType:
+                raise TypeError()
+            tb = typecheck(b)
+            if tb.type != SimType:
+                raise TypeError
+            return If(tc,tb,tb.type)
+
         case IfElse(c, t, f): # We have to typecheck both branches.
             tc = typecheck(c)
             if tc.type != BoolType:
@@ -383,7 +400,6 @@ def eval(program: AST, environment: Environment = None) -> Value:
         case FracLiteral(value):
             return value
         case Variable(name):
-            print(Variable(name))
             return environment.get(name)
         case ListLiteral(value):
             # print(f'values: {value}')
@@ -433,6 +449,8 @@ def eval(program: AST, environment: Environment = None) -> Value:
             right_type=typecheck(right).type
             if (left_type==NumType and right_type== NumType):
                 return  eval2(left ) /  eval2(right )
+            elif(left_type==VarType and right_type== VarType):
+                return float(float(eval2(left )) /  float(eval2(right )))
             elif(left_type==IntType and right_type== IntType):
                 return int(int(eval2(left )) /  int(eval2(right )))
             elif(left_type==FracType and right_type== FracType):
@@ -572,6 +590,13 @@ def eval(program: AST, environment: Environment = None) -> Value:
             eval2(Put(vari,NumLiteral(un)))
             return  eval2(NumLiteral(un) )
         
+        #If
+        case If(c,b):
+            condition_eval= eval2(c)
+            if(condition_eval==True):
+                return  eval2(b)
+            else:
+                return 
 
         # IfElse
         case IfElse(c,l,r):
@@ -690,24 +715,3 @@ def eval(program: AST, environment: Environment = None) -> Value:
         
     raise InvalidProgram()
 
-def test_letfun():
-    a = Variable("a")
-    b = Variable("b")
-    f = Variable("f")
-    c=FunCall(f,[NumLiteral(2),NumLiteral(1)])
-    e=LetFun(f,[a,b],BinOp("+",a,b),c)
-
-    print(eval(e))
-
-# test_letfun()
-
-# a=Variable('a')
-# b=Variable('b')
-# n1=NumLiteral(10)
-# n2=NumLiteral(3)
-# n3=NumLiteral(0)
-# con=BinOp('<',a,n1)
-# up=UnOp('++',a)
-# body=Let(a,n1,BinOp('+=',a,Let(b,n2,n2)))
-# f=Let(a,n3,For(con,up,PrintOp(BinOp('+=',a,Let(b,n2,n2)))))
-# eval(f)
