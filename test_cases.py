@@ -10,7 +10,7 @@ import pytest
 def test_div_operator():
     a  = Variable("a")
     n1= NumLiteral(5)
-    e2 = BinOp("/", a, a)
+    e2 = BinOp("/", a, a) 
     e  = Let(a, n1, e2)
     assert eval(e) == 1
 
