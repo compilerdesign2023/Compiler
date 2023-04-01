@@ -435,8 +435,8 @@ def eval(program: AST, environment: Environment = None) -> Value:
             for thing in things:
                 v = eval2(thing)
             return v
+            
         case BinOp("+", left, right):
-    
             return eval2(left) + eval2(right)
         case BinOp("-", left, right):
             return eval2(left) - eval2(right)
@@ -447,6 +447,9 @@ def eval(program: AST, environment: Environment = None) -> Value:
                 raise InvalidProgram()
             left_type=typecheck(left).type
             right_type=typecheck(right).type
+            
+            print(eval2(left))
+
             if (left_type==NumType and right_type== NumType):
                 return  eval2(left ) /  eval2(right )
             elif(left_type==VarType and right_type== VarType):
@@ -671,17 +674,14 @@ def eval(program: AST, environment: Environment = None) -> Value:
                 return bool(left_var)
             return bool(left_var)
         
-        case For(condition,update,body):
-            environment.enter_scope()
-            eval_cond=eval2(condition)
-            while(eval_cond):
+        case For(condition, update, body):
+            while eval2(condition):
+                environment.enter_scope()
                 eval2(body)
-                eval2(Put(update.vari,update))
-                cond=eval2(condition)
-                if(cond==False):
-                    break
-            environment.exit_scope()
+                eval2(update)
+                environment.exit_scope()
             return
+        
         case Whilethen(condition,then_body):
             environment.enter_scope()
             condi = eval2(condition)
@@ -692,26 +692,7 @@ def eval(program: AST, environment: Environment = None) -> Value:
                     break
             environment.exit_scope()
             return
-        case LetFun(Variable(_) as v, params, body, expr):
-            print("expr: ",expr)
-            environment.enter_scope()
-            environment.add(v, FnObject(params, body))
-            
-            v = eval2(expr)
-            environment.exit_scope()
-            return v
-        case FunCall(Variable(_) as v, args):
-            fn = environment.get(v)
-            argv = []
-            for arg in args:
-                argv.append(eval2(arg))
-            environment.enter_scope()
-            for param, arg in zip(fn.params, argv):
-                environment.add(param, arg)
-            print("fn: ",fn.body)
-            v = eval2(fn.body)
-            environment.exit_scope()
-            return v
+        
         
     raise InvalidProgram()
 

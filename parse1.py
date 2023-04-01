@@ -127,25 +127,15 @@ class Lexer:
         
         try:
             match self.stream.next_char():
-                # case c if c in symbolic_operators: return Operator(c)
-                case c if c in Bitwise_Operators: return BitwiseOperator(c)
-                # case c if c in unary_operators: return UnaryOperator(c)
-
-                case c if c in symbolic_operators:
-                    try:
-                        c2 = self.stream.next_char()
-                        if c==c2:
-                            s=c+c2
-                            if s in unary_operators:
-                                return UnaryOperator(s)
-                            if s in Bitwise_Operators:
-                                return BitwiseOperator(s)
-                        else:
-                            self.stream.unget()
-                            return Operator(c)
-                    except EndOfStream:
+                case c if c in symbolic_operators: 
+                    n=c
+                    l=self.stream.next_char()
+                    n+=l
+                    if(n in unary_operators):
+                        return Operator(n)
+                    else:
+                        self.stream.unget()
                         return Operator(c)
-                    
                 case c if c.isdigit():
                     
                     n = int(c)
@@ -364,7 +354,7 @@ class Parser:
 
 
     def parse_mult(self):
-        left = self.parse_atom()
+        left = self.parse_unary()
         while True:
             match self.lexer.peek_token():
                 case Operator(op) if op in "*/":
@@ -501,5 +491,4 @@ with open("test_cases\myfile.txt") as f:
     lexer = Lexer(stream)
     parser = Parser.from_lexer(lexer)
     ast = Parser.parse_expr(parser)
-    #print(ast)
-    eval(ast)
+    print(eval(ast))
