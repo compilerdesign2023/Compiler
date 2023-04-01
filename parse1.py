@@ -3,7 +3,6 @@ import ast
 import re
 class EndOfStream(Exception):
     pass
-
 @dataclass
 class Stream:
     source: str
