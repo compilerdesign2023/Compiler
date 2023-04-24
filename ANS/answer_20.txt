@@ -1,0 +1,20 @@
+let x=list [12,32,-1,92,10,0] in
+let l=x.length in 
+let maxSubSum=0 in
+let i=0 in
+{
+    let sum=0 in
+    for i<l up i+=1 do
+        let curr=x.get i in
+        if i==l-1 or curr<0 then{
+            if sum>maxSubSum then{
+                maxSubSum=sum;
+                sum=0;
+            }; end;
+        }; 
+        else{
+            sum=sum+curr;
+        };
+        end;
+    print maxSubSum;
+} end
