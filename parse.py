@@ -380,6 +380,8 @@ class Parser:
                             case Identifier(I):
                                 self.lexer.advance()
                                 parameters.append(Variable(I))
+                            case Markers(','):
+                                self.lexer.advance()
                             
                             case _:
                                 self.lexer.advance()
