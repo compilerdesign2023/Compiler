@@ -10,4 +10,5 @@ let i=1 in
         if c==e then {
             n=n+1;
         }; end;
+    print n+1;
 } end
