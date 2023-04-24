@@ -1,0 +1,18 @@
+let t= String "cat" in 
+let r= String "cow" in 
+let l= t.length in
+let edit=0 in
+    {
+        let i=1 in 
+            {
+                for i <= l up i+=1 do
+                    {   let iid= i+1 in
+                        let c= t.slice i iid 1 in
+                        let d= r.slice i iid 1 in
+                            if c != d then 
+                                edit+=1 end           
+                    };
+            };
+        print edit;
+    }
+end 
