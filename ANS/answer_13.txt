@@ -1,0 +1,25 @@
+let integers= list [200,40,99,12,96] in
+let l=integers.length in
+let max=0 in
+let secondMax=0 in
+let maxIndex=0 in
+let i=0 in
+{
+    for i<l up i+=1 do{
+        let val=integers.get i in
+        if val>max then{
+            max=val;
+            maxIndex=i;
+        };end;
+    };
+    
+    i=0;
+    for i<l up i+=1 do {
+        let val=integers.get i in
+        if val!= max and val>secondMax then {
+            secondMax=val;
+        }; 
+        end
+    };
+    print secondMax;
+}
