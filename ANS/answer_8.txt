@@ -1,0 +1,13 @@
+let integers=list [1,23,43,53] in
+let l=integers.length in
+let sum=0 in
+let index=0 in
+{
+    for index<l up index+=1 do
+        let intVal=integers.get index in
+        {
+        sum=sum+intVal;
+        };
+    print sum;
+
+} end

@@ -1,0 +1,22 @@
+let pal=String "abba" in
+let l=pal.length in
+let half = l//2 in
+let flag=0 in
+let i=1 in
+{
+    for i<half up i+=1 do
+    {
+        let n=i+1 in
+        let x=pal.slice i n 1 in
+        let j=l-i-1 in
+        let k= j+1 in 
+        let y= pal.slice j k 1 in
+        if x!=y then {
+            flag=1;
+        }; end;
+    };
+
+    if flag==1 then
+    print False;
+    else print True; end;
+} end

@@ -1,0 +1,31 @@
+let integers=list [1,3,2,99,20] in
+let l=integers.length in
+let target= 119 in
+let y=0 in
+let z=0 in
+let index=0 in
+{
+    for index<l up index+=1 do
+        let j=index+1 in
+        for j<l up j+=1 do
+            let m = integers.get index in
+            let n=integers.get j in
+            let sum=m+n in
+            if sum==target then
+            {
+                y=m;
+                z=n;
+            }; end;
+    if y!=0 and z!=0 
+    then
+        {
+            print y;
+            print z;  
+        };
+    else {
+        let message=String "No such numbers found that sums up to the target" in
+        print message;
+    }; end;
+
+    
+} end
