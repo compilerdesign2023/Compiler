@@ -1,0 +1,15 @@
+let n=16 in
+let a=String "Even" in
+let b=String "Odd" in
+{
+    if n%2==0 then
+    {
+    print a;
+    };
+    else
+    { 
+    print b;
+    };
+    end
+}
+end

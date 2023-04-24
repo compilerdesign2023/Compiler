@@ -1,0 +1,38 @@
+let n=2 in 
+let num=18 in
+let a=String "Prime" in
+let b= String "Composite" in
+let c=String "Neither prime nor composite" in
+let flag=0 in
+{
+    if num==1
+    then{
+        print c;
+    };
+    else{
+
+    };
+    end
+    for n<num up n+=1 do
+    {  
+        if num%n==0 
+        then
+        {   
+            flag=flag+1;
+        };
+        else{
+
+        };
+        end
+    };
+    if flag>0
+    then
+    {
+        print b;
+    };
+    else{
+        print a;
+    };
+    end
+}
+end
