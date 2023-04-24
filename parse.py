@@ -1,6 +1,10 @@
 from start import *
 import ast
+import argparse
 
+parser = argparse.ArgumentParser()
+parser.add_argument("--filename", type=str)
+args = parser.parse_args()
 
 class EndOfStream(Exception):
     pass
@@ -671,7 +675,7 @@ class Parser:
             case _:
                 return self.parse_simple()
 
-with open("myfile.txt") as f:
+with open(args.filename) as f:
     stream = Stream.from_file(f)
     lexer = Lexer(stream)
     parser = Parser.from_lexer(lexer)
