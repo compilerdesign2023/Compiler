@@ -1,9 +1,37 @@
-let a=5 in
-let b=1 in
-let fact=1 in
-seq
-for b<=a up b+=1 do
-    fact=fact*b;
-print fact;
-endseq
+
+let integers=list [2,31,8,10] in
+let l=integers.length in
+let a=0 in
+let b=0 in
+let c=0 in
+let i=0 in
+{
+    for i<l up i+=1 do
+        let j=i+1 in
+        for j<l up j+=1 do
+            let k=j+1 in
+            for k<l up k+=1 do
+                let p=integers.get i in
+                let q=integers.get j in
+                let r=integers.get k in
+                if p+q == r then {
+                    a=p;
+                    b=q;
+                    c=r;
+                }; end;
+    if a!=0 and b!=0 and c!=0 
+    then
+        {
+        print a;
+        print b;
+        print c;
+        }; 
+    else 
+        {
+            let message=String "No such triplet found" in
+            print message;
+        }; end;
+
+}
+
 end
